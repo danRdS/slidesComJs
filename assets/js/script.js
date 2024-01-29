@@ -1,7 +1,6 @@
 const modalFormUpload = document.querySelector('.modal-form-upload');
 const uploadForm = document.getElementById('uploadForm');
 const btnIniciarAddFoto = document.getElementById('btn-iniciar-add-foto');
-console.log(btnIniciarAddFoto);
 
 const abrirAreaSelecaoImagens = () => {
     btnIniciarAddFoto.classList.add('botao-add-foto-clicado');
@@ -75,6 +74,7 @@ function uploadFiles() {
 
 function abrirEscolhas() {
     previewContainer.innerHTML = '';
+    fileInput.value = '';
 }
 
 function confirmarFotos() {
@@ -87,9 +87,7 @@ function confirmarFotos() {
     // localStorage.getItem('imagensSlide') ? localStorage.removeItem('imagensSlide') : null;
     localStorage.setItem('imagensSlide', JSON.stringify(urlsImagens));
 
-    modalFormUpload.classList.remove('mostrar-popup-upload-imagem');
-    uploadForm.classList.remove('animacao-descendente-form');
-    // cancelar();
+    cancelar();
 }
 
 // Area dos slides
@@ -128,15 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderizarSlides(imagensNoLocalStorage);
     }
 });
-
-// if(localStorage.getItem('imagensSlide')) {
-//     const arrayRecuperado = JSON.parse(localStorage.getItem('imagensSlide'));
-//     arrayRecuperado.forEach(imagem => {
-//         imagensNoLocalStorage.push(imagem);
-//     })
-
-//     renderizarSlides(imagensNoLocalStorage);
-// }
 
 const verAnterior = () => {
     if(!contador) {
