@@ -84,7 +84,7 @@ function confirmarFotos() {
     btnIniciarAddFoto.classList.add('botao-add-foto-retira-animacao');
     renderizarSlides(urlsImagens);
 
-    localStorage.getItem('imagensSlide') ? localStorage.removeItem('imagensSlide') : null;
+    // localStorage.getItem('imagensSlide') ? localStorage.removeItem('imagensSlide') : null;
     localStorage.setItem('imagensSlide', JSON.stringify(urlsImagens));
 
     modalFormUpload.classList.remove('mostrar-popup-upload-imagem');
