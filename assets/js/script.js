@@ -87,7 +87,9 @@ function confirmarFotos() {
     localStorage.getItem('imagensSlide') ? localStorage.removeItem : null;
     localStorage.setItem('imagensSlide', JSON.stringify(urlsImagens));
 
-    cancelar();
+    modalFormUpload.classList.remove('mostrar-popup-upload-imagem');
+    uploadForm.classList.remove('animacao-descendente-form');
+    // cancelar();
 }
 
 // Area dos slides
@@ -115,14 +117,26 @@ function renderizarSlides(listaImagens) {
 
 // area localStorage
 const imagensNoLocalStorage = [];
-if(localStorage.getItem('imagensSlide')) {
-    const arrayRecuperado = JSON.parse(localStorage.getItem('imagensSlide'));
-    arrayRecuperado.forEach(imagem => {
-        imagensNoLocalStorage.push(imagem);
-    })
 
-    renderizarSlides(imagensNoLocalStorage);
-}
+document.addEventListener('DOMContentLoaded', () => {
+    if(localStorage.getItem('imagensSlide')) {
+        const arrayRecuperado = JSON.parse(localStorage.getItem('imagensSlide'));
+        arrayRecuperado.forEach(imagem => {
+            imagensNoLocalStorage.push(imagem);
+        })
+    
+        renderizarSlides(imagensNoLocalStorage);
+    }
+});
+
+// if(localStorage.getItem('imagensSlide')) {
+//     const arrayRecuperado = JSON.parse(localStorage.getItem('imagensSlide'));
+//     arrayRecuperado.forEach(imagem => {
+//         imagensNoLocalStorage.push(imagem);
+//     })
+
+//     renderizarSlides(imagensNoLocalStorage);
+// }
 
 const verAnterior = () => {
     if(!contador) {
