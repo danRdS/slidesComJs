@@ -236,31 +236,44 @@ function uploadFiles() {
     urlsImagens = [];
     areaFotosPreSelecionadas.classList.remove('ocultar');
 
-    const imagePromises = [];
-
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const reader = new FileReader();
         reader.onload = async function (e) {
-            const base64 = e.target.result;
+            // const base64 = e.target.result;
     
             try {
-                // const { resized, original } = await resizeImage(base64, 800, 600);
-                const { width, height } = await getImageDimensions(base64);
-                const originalImage = { width, height, url: base64 };
+                const compressedDataUrl = await compressImage(file);
                 const imgPreview = document.createElement('img');
-                // imgPreview.src = resized;
-                imgPreview.src = base64;
+                imgPreview.src = compressedDataUrl;
                 imgPreview.alt = `Imagem ${i + 1}`;
                 previewContainer.appendChild(imgPreview);
         
-                // urlsImagens.push({ resized, original });
-                urlsImagens.push(originalImage);
+                urlsImagens.push(compressedDataUrl);
                 buttonConfirmar.removeAttribute('disabled');
             } catch (error) {
                 console.error('Erro ao redimensionar imagem:', error);
                 alert('Erro ao redimensionar imagem:', error);
             }
+
+            // try {
+            //     const { width, height } = await getImageDimensions(base64);
+            //     const originalImage = { width, height, url: base64 };
+
+            //     const imgPreview = document.createElement('img');
+            //     imgPreview.src = base64;
+            //     imgPreview.alt = `Imagem ${i + 1}`;
+            //     previewContainer.appendChild(imgPreview);
+
+            //     urlsImagens.push(originalImage);
+            //     buttonConfirmar.removeAttribute('disabled');
+            // } catch (error) {
+            //     console.error('Erro ao obter dimensões da imagem:', error);
+            //     alert('Erro ao obter dimensões da imagem:', error);
+            // }
+
+
+
         };
     
      reader.readAsDataURL(file);
@@ -268,10 +281,103 @@ function uploadFiles() {
 }
 
 
+async function getImageDimensions(base64) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+
+        img.onload = () => {
+            resolve({
+                width: img.width,
+                height: img.height,
+            });
+        };
+
+        img.onerror = reject;
+
+        img.src = base64;
+    });
+}
+
+async function compressImage(file) {
+    return new Promise((resolve, reject) => {
+        const options = {
+            quality: .5, // Ajuste a qualidade conforme necessário
+            // maxWidth: 800, // Largura máxima da imagem
+            // maxHeight: 600, // Altura máxima da imagem
+            // maxWidth: 700, // Largura máxima da imagem
+            // maxHeight: 500, // Altura máxima da imagem
+        };
+
+        // const reader = new FileReader();
+
+        // reader.onload = async () => {
+        //     try {
+        //         const compressedDataUrl = await resizeImage(reader.result, options.maxWidth, options.maxHeight);
+        //         resolve(compressedDataUrl);
+        //     } catch (error) {
+        //         reject(error);
+        //     }
+        // };
+
+        // reader.onerror = (error) => {
+        //     reject(error);
+        // };
+
+        // reader.readAsDataURL(file);
 
 
 
 
+
+
+        new ImageCompressor(file, {
+            ...options,
+            success(result) {
+                const reader = new FileReader();
+                reader.readAsDataURL(result);
+                reader.onload = () => resolve(reader.result);
+            },
+            error(error) {
+                reject(error);
+            },
+        });
+
+    });
+}
+
+
+// function resizeImage(base64, maxWidth, maxHeight) {
+//     return new Promise((resolve, reject) => {
+//         const img = new Image();
+//         img.src = base64;
+
+//         img.onload = () => {
+//             let width = img.width;
+//             let height = img.height;
+
+//             if (width > maxWidth) {
+//                 height *= maxWidth / width;
+//                 width = maxWidth;
+//             }
+
+//             if (height > maxHeight) {
+//                 width *= maxHeight / height;
+//                 height = maxHeight;
+//             }
+
+//             const canvasResized = document.createElement('canvas');
+//             const ctxResized = canvasResized.getContext('2d');
+//             canvasResized.width = width;
+//             canvasResized.height = height;
+
+//             ctxResized.drawImage(img, 0, 0, width, height);
+
+//             resolve(canvasResized.toDataURL('image/jpeg'));
+//         };
+
+//         img.onerror = reject;
+//     });
+// }
 
 function abrirEscolhas() {
     previewContainer.innerHTML = '';
@@ -285,11 +391,8 @@ function confirmarFotos() {
     btnIniciarAddFoto.classList.add('botao-add-foto-retira-animacao');
     renderizarSlides(urlsImagens);
 
-    const salvoAnteriormente = localStorage.getItem('imagensSlide');
     localStorage.setItem('imagensSlide', JSON.stringify(urlsImagens));
-    if(localStorage.getItem('imagensSlide') != salvoAnteriormente) {
-        alert('não salvo');
-    }
+
     // localStorage.setItem('imagensSlide', JSON.stringify(urlsImagens.map(img => img.original)));
     // localStorage.setItem('imagensSlide', JSON.stringify(urlsRedimensionadas));
 
@@ -306,29 +409,15 @@ function renderizarSlides(listaImagens) {
     imagens.innerHTML = '';
     contador = 0;
 
-    // listaImagens.forEach((slide, index) => {
-    //     const imagem = document.createElement('img');
-    //     imagem.src = listaImagens[index];
-    //     if(urlsImagens.length) {
-    //         imagem.src = urlsImagens[index];
-    //     }
-    //     imagem.alt = `Imagem ${index + 1}`;
-    //     imagens.appendChild(imagem);
-    //     imagem.style.left = `${index * 100}%`;
-    // })
-    // indiceImagem.innerText = `${contador + 1}/${imagens.children.length}`;
+    listaImagens.forEach((compressedDataUrl, index) => {
+        const imgElement = document.createElement('img');
+        imgElement.src = compressedDataUrl; // Exibe a versão comprimida no DOM
+        imgElement.alt = `Imagem ${index + 1}`;
+        imagens.appendChild(imgElement);
+        imgElement.style.left = `${index * 100}%`;
+    });
 
-
-    listaImagens.forEach((image, index) => {
-        const imagem = document.createElement('img');
-        imagem.src = image.url;
-        imagem.alt = `Imagem ${index + 1}`;
-        imagens.appendChild(imagem);
-        // imagem.style.width = `${image.width}px`; // Adicione esta linha para definir a largura da imagem
-        // imagem.style.height = `${image.height}px`; // Adicione esta linha para definir a altura da imagem
-        imagem.style.left = `${index * 100}%`;
-      });
-      indiceImagem.innerText = `${contador + 1}/${imagens.children.length}`;
+    indiceImagem.innerText = `${contador + 1}/${imagens.children.length}`;
 }
 
 // area localStorage
@@ -344,104 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderizarSlides(imagensNoLocalStorage);
     }
 });
-
-
-
-
-
-// function resizeImage(base64, maxWidth, maxHeight) {
-//     return new Promise((resolve, reject) => {
-//       const img = new Image();
-//       img.src = base64;
-  
-//       img.onload = () => {
-//         let width = img.width;
-//         let height = img.height;
-  
-//         if (width > maxWidth) {
-//           height *= maxWidth / width;
-//           width = maxWidth;
-//         }
-  
-//         if (height > maxHeight) {
-//           width *= maxHeight / height;
-//           height = maxHeight;
-//         }
-  
-//         const canvas = document.createElement('canvas');
-//         const ctx = canvas.getContext('2d');
-//         canvas.width = width;
-//         canvas.height = height;
-  
-//         ctx.drawImage(img, 0, 0, width, height);
-  
-//         resolve(canvas.toDataURL('image/jpeg'));
-//       };
-  
-//       img.onerror = reject;
-//     });
-//   }
-
-
-
-//   function resizeImage(base64, maxWidth, maxHeight) {
-//     return new Promise((resolve, reject) => {
-//       const img = new Image();
-//       img.src = base64;
-  
-//       img.onload = () => {
-//         let width = img.width;
-//         let height = img.height;
-  
-//         if (width > maxWidth) {
-//           height *= maxWidth / width;
-//           width = maxWidth;
-//         }
-  
-//         if (height > maxHeight) {
-//           width *= maxHeight / height;
-//           height = maxHeight;
-//         }
-  
-//         const canvasResized = document.createElement('canvas');
-//         const ctxResized = canvasResized.getContext('2d');
-//         canvasResized.width = width;
-//         canvasResized.height = height;
-  
-//         ctxResized.drawImage(img, 0, 0, width, height);
-  
-//         resolve({
-//           resized: canvasResized.toDataURL('image/jpeg'),
-//           original: base64,
-//         });
-//       };
-  
-//       img.onerror = reject;
-//     });
-//   }
-
-
-
-  async function getImageDimensions(base64) {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = base64;
-  
-      img.onload = () => {
-        resolve({
-          width: img.width,
-          height: img.height,
-        });
-      };
-  
-      img.onerror = reject;
-    });
-  }
-
-
-
-
-
 
 const verAnterior = () => {
     if(!contador) {
