@@ -259,6 +259,7 @@ function uploadFiles() {
                 buttonConfirmar.removeAttribute('disabled');
             } catch (error) {
                 console.error('Erro ao redimensionar imagem:', error);
+                alert('Erro ao redimensionar imagem:', error);
             }
         };
     
@@ -284,7 +285,11 @@ function confirmarFotos() {
     btnIniciarAddFoto.classList.add('botao-add-foto-retira-animacao');
     renderizarSlides(urlsImagens);
 
+    const salvoAnteriormente = localStorage.getItem('imagensSlide');
     localStorage.setItem('imagensSlide', JSON.stringify(urlsImagens));
+    if(localStorage.getItem('imagensSlide') != salvoAnteriormente) {
+        alert('não salvo');
+    }
     // localStorage.setItem('imagensSlide', JSON.stringify(urlsImagens.map(img => img.original)));
     // localStorage.setItem('imagensSlide', JSON.stringify(urlsRedimensionadas));
 
