@@ -309,44 +309,81 @@ async function getImageDimensions(base64) {
 
 
 
+// async function compressImage(file) {
+//     return new Promise((resolve, reject) => {
+//         const options = {
+//             quality: 0.5, // Ajuste a qualidade conforme necessário
+//             maxWidth: 800, // Largura máxima da imagem
+//             maxHeight: 600, // Altura máxima da imagem
+//         };
+
+//         const reader = new FileReader();
+//         reader.onload = (e) => {
+//             const base64 = e.target.result;
+//             loadImage(
+//                 base64,
+//                 (canvas) => {
+//                     canvas.toBlob(
+//                         (blob) => {
+//                             const blobReader = new FileReader();
+//                             blobReader.readAsDataURL(blob);
+//                             blobReader.onload = () => resolve(blobReader.result);
+//                         },
+//                         'image/jpeg',
+//                         options.quality
+//                     );
+//                 },
+//                 {
+//                     maxWidth: options.maxWidth,
+//                     maxHeight: options.maxHeight,
+//                     orientation: true, // Ativa a correção automática de orientação
+//                 }
+//             );
+//         };
+//         reader.onerror = reject;
+//         reader.readAsDataURL(file);
+//     });
+// }
+
+
+
+
+
 async function compressImage(file) {
     return new Promise((resolve, reject) => {
         const options = {
-            quality: 0.5, // Ajuste a qualidade conforme necessário
-            maxWidth: 800, // Largura máxima da imagem
-            maxHeight: 600, // Altura máxima da imagem
+            quality: 0.8,
+            maxWidth: 800,
+            maxHeight: 600,
         };
 
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
             const base64 = e.target.result;
-            loadImage(
-                base64,
-                (canvas) => {
-                    canvas.toBlob(
-                        (blob) => {
-                            const blobReader = new FileReader();
-                            blobReader.readAsDataURL(blob);
-                            blobReader.onload = () => resolve(blobReader.result);
-                        },
-                        'image/jpeg',
-                        options.quality
-                    );
-                },
-                {
-                    maxWidth: options.maxWidth,
-                    maxHeight: options.maxHeight,
-                    orientation: true, // Ativa a correção automática de orientação
-                }
-            );
+
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                const { width, height } = img;
+
+                canvas.width = width;
+                canvas.height = height;
+
+                ctx.drawImage(img, 0, 0, width, height);
+
+                const correctedBase64 = canvas.toDataURL('image/jpeg', options.quality);
+                resolve(correctedBase64);
+            };
+
+            img.src = base64;
         };
+
         reader.onerror = reject;
         reader.readAsDataURL(file);
     });
 }
-
-
-
 
 
 
