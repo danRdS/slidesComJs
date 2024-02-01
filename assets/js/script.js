@@ -313,8 +313,8 @@ async function compressImage(file) {
     return new Promise((resolve, reject) => {
         const options = {
             quality: 0.5, // Ajuste a qualidade conforme necessário
-            // maxWidth: 800, // Largura máxima da imagem
-            // maxHeight: 600, // Altura máxima da imagem
+            maxWidth: 800, // Largura máxima da imagem
+            maxHeight: 600, // Altura máxima da imagem
         };
 
         const reader = new FileReader();
