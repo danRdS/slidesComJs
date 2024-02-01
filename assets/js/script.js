@@ -341,7 +341,18 @@ function renderizarSlides(listaImagens) {
         imgElement.style.left = `${index * 100}%`;
     });
 
-    indiceImagem.innerText = `${contador + 1}/${imagens.children.length}`;
+    indiceImagem.innerText = `${contador + 1}/${imagens.children.length}`;    
+    const btnSlides = document.querySelectorAll('.slides button');
+
+    if(listaImagens.length > 1) {
+        barraProgressoTempoExibicao.classList.remove('ocultar');
+        btnSlides.forEach(btn => btn.classList.remove('ocultar'));
+    } else {
+        barraProgressoTempoExibicao.classList.add('ocultar');
+        btnSlides.forEach(btn => btn.classList.add('ocultar'));
+    }
+
+    reproduzirAutomaticamente();
 }
 
 // area localStorage
@@ -392,8 +403,6 @@ const reproduzirAutomaticamente = () => {
     setInterval(() => calcularTempoDecorrido(), 1);
     intervalo = setInterval(() => verProximo(), 4000);
 }
-
-reproduzirAutomaticamente();
 
 const calcularTempoDecorrido = () => {
     const agora = new Date().getTime();
