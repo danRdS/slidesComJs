@@ -352,7 +352,7 @@ async function getImageDimensions(base64) {
 async function compressImage(file) {
     return new Promise((resolve, reject) => {
         const options = {
-            quality: 0.8,
+            quality: 0.5,
             maxWidth: 800,
             maxHeight: 600,
         };
