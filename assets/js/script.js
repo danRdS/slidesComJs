@@ -280,28 +280,28 @@ async function getImageDimensions(base64) {
     });
 }
 
-// async function compressImage(file) {
-//     return new Promise((resolve, reject) => {
-//         const options = {
-//             quality: .5, // Ajuste a qualidade conforme necessário
-//             // maxWidth: 800, // Largura máxima da imagem
-//             // maxHeight: 600, // Altura máxima da imagem
-//         };
+async function compressImage(file) {
+    return new Promise((resolve, reject) => {
+        const options = {
+            quality: .5, // Ajuste a qualidade conforme necessário
+            // maxWidth: 800, // Largura máxima da imagem
+            // maxHeight: 600, // Altura máxima da imagem
+        };
 
-//         new ImageCompressor(file, {
-//             ...options,
-//             success(result) {
-//                 const reader = new FileReader();
-//                 reader.readAsDataURL(result);
-//                 reader.onload = () => resolve(reader.result);
-//             },
-//             error(error) {
-//                 reject(error);
-//             },
-//         });
+        new ImageCompressor(file, {
+            ...options,
+            success(result) {
+                const reader = new FileReader();
+                reader.readAsDataURL(result);
+                reader.onload = () => resolve(reader.result);
+            },
+            error(error) {
+                reject(error);
+            },
+        });
 
-//     });
-// }
+    });
+}
 
 
 
@@ -349,41 +349,41 @@ async function getImageDimensions(base64) {
 
 
 
-async function compressImage(file) {
-    return new Promise((resolve, reject) => {
-        const options = {
-            quality: 0.5,
-            maxWidth: 800,
-            maxHeight: 600,
-        };
+// async function compressImage(file) {
+//     return new Promise((resolve, reject) => {
+//         const options = {
+//             quality: 0.4,
+//             // maxWidth: 800,
+//             // maxHeight: 600,
+//         };
 
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-            const base64 = e.target.result;
+//         const reader = new FileReader();
+//         reader.onload = async (e) => {
+//             const base64 = e.target.result;
 
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
+//             const img = new Image();
+//             img.onload = () => {
+//                 const canvas = document.createElement('canvas');
+//                 const ctx = canvas.getContext('2d');
 
-                const { width, height } = img;
+//                 const { width, height } = img;
 
-                canvas.width = width;
-                canvas.height = height;
+//                 canvas.width = width;
+//                 canvas.height = height;
 
-                ctx.drawImage(img, 0, 0, width, height);
+//                 ctx.drawImage(img, 0, 0, width, height);
 
-                const correctedBase64 = canvas.toDataURL('image/jpeg', options.quality);
-                resolve(correctedBase64);
-            };
+//                 const correctedBase64 = canvas.toDataURL('image/jpeg', options.quality);
+//                 resolve(correctedBase64);
+//             };
 
-            img.src = base64;
-        };
+//             img.src = base64;
+//         };
 
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-}
+//         reader.onerror = reject;
+//         reader.readAsDataURL(file);
+//     });
+// }
 
 
 
