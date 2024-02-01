@@ -323,6 +323,33 @@ section {
     right: 0;
 }
 
+progress {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    appearance: none;
+    width: 90%;
+    height: 3px;
+    border-radius: 1rem;
+    border: none;
+    background-color: rgba(194, 222, 246, 0.112);
+}
+
+progress::-webkit-progress-bar {
+    background-color: rgba(194, 222, 246, 0.112);
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+progress::-webkit-progress-value {
+    background: linear-gradient(to right bottom, #a0b3f9bb, #09fb);
+}
+
+progress::-moz-progress-bar {
+    background: linear-gradient(to right bottom, #a0b3f9bb, #09fb);
+}
+
 .ocultar {
     display: none;
 }

@@ -358,6 +358,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+let intervalo;
+let inicioIntervalo, tempoDecorrido;
+
+const barraProgressoTempoExibicao = document.getElementById('barraProgressoTempo');
+
 const verAnterior = () => {
     if(!contador) {
         contador = imagens.children.length - 1;
@@ -366,6 +371,7 @@ const verAnterior = () => {
         contador--;
         slideImage();
     }
+    reproduzirAutomaticamente();
 };
 
 const verProximo = () => {
@@ -376,7 +382,24 @@ const verProximo = () => {
         contador++;
         slideImage();
     }
+    reproduzirAutomaticamente();
 };
+
+const reproduzirAutomaticamente = () => {
+    clearInterval(intervalo);
+    barraProgressoTempoExibicao.value = 0;
+    inicioIntervalo = new Date().getTime();
+    setInterval(() => calcularTempoDecorrido(), 1);
+    intervalo = setInterval(() => verProximo(), 4000);
+}
+
+reproduzirAutomaticamente();
+
+const calcularTempoDecorrido = () => {
+    const agora = new Date().getTime();
+    tempoDecorrido = agora - inicioIntervalo;
+    barraProgressoTempoExibicao.value = tempoDecorrido;
+}
 
 const slideImage = () => {
     Object.values(imagens.children).forEach(slide => {
