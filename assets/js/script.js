@@ -121,52 +121,6 @@ async function getImageDimensions(base64) {
 //     });
 // }
 
-
-
-
-
-
-
-// async function compressImage(file) {
-//     return new Promise((resolve, reject) => {
-//         const options = {
-//             quality: 0.5, // Ajuste a qualidade conforme necessário
-//             maxWidth: 800, // Largura máxima da imagem
-//             maxHeight: 600, // Altura máxima da imagem
-//         };
-
-//         const reader = new FileReader();
-//         reader.onload = (e) => {
-//             const base64 = e.target.result;
-//             loadImage(
-//                 base64,
-//                 (canvas) => {
-//                     canvas.toBlob(
-//                         (blob) => {
-//                             const blobReader = new FileReader();
-//                             blobReader.readAsDataURL(blob);
-//                             blobReader.onload = () => resolve(blobReader.result);
-//                         },
-//                         'image/jpeg',
-//                         options.quality
-//                     );
-//                 },
-//                 {
-//                     maxWidth: options.maxWidth,
-//                     maxHeight: options.maxHeight,
-//                     orientation: true, // Ativa a correção automática de orientação
-//                 }
-//             );
-//         };
-//         reader.onerror = reject;
-//         reader.readAsDataURL(file);
-//     });
-// }
-
-
-
-
-
 async function compressImage(file) {
     return new Promise((resolve, reject) => {
         const options = {
@@ -202,51 +156,6 @@ async function compressImage(file) {
         reader.readAsDataURL(file);
     });
 }
-
-
-
-
-// async function compressImage(file) {
-//     return new Promise((resolve, reject) => {
-//         const options = {
-//             canvas: true,
-//             orientation: true,
-//             maxWidth: 800,
-//             maxHeight: 600,
-//         };
-
-//         loadImage(file, (canvas) => {
-//             canvas.toBlob((blob) => {
-//                 const reader = new FileReader();
-//                 reader.onload = () => resolve(reader.result);
-//                 reader.readAsDataURL(blob);
-//             }, 'image/jpeg');
-//         }, options);
-//     });
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function abrirEscolhas() {
     previewContainer.innerHTML = '';
