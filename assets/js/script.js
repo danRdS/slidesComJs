@@ -209,6 +209,7 @@ const cancelar = () => {
 
 const areaFotosPreSelecionadas = document.querySelector('.area-fotos-pre-selecionadas');
 const totalInicialDeFotos = document.querySelector('.total-inicial');
+const loader = document.querySelector('.loader');
 const previewContainer = document.getElementById('previewContainer');
 const viewContainer = document.getElementById('viewContainer');
 const buttonConfirmar = document.getElementById('confirmar');
@@ -239,14 +240,13 @@ function uploadFiles() {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const reader = new FileReader();
-        reader.onload = async function (e) {
-            // const base64 = e.target.result;
-    
+        reader.onload = async function () {
             try {
                 const compressedDataUrl = await compressImage(file);
                 const imgPreview = document.createElement('img');
                 imgPreview.src = compressedDataUrl;
                 imgPreview.alt = `Imagem ${i + 1}`;
+                loader.classList.add('esconder-loader');
                 previewContainer.appendChild(imgPreview);
         
                 urlsImagens.push(compressedDataUrl);
@@ -255,24 +255,6 @@ function uploadFiles() {
                 console.error('Erro ao redimensionar imagem:', error);
                 alert('Erro ao redimensionar imagem:', error);
             }
-
-            // try {
-            //     const { width, height } = await getImageDimensions(base64);
-            //     const originalImage = { width, height, url: base64 };
-
-            //     const imgPreview = document.createElement('img');
-            //     imgPreview.src = base64;
-            //     imgPreview.alt = `Imagem ${i + 1}`;
-            //     previewContainer.appendChild(imgPreview);
-
-            //     urlsImagens.push(originalImage);
-            //     buttonConfirmar.removeAttribute('disabled');
-            // } catch (error) {
-            //     console.error('Erro ao obter dimensões da imagem:', error);
-            //     alert('Erro ao obter dimensões da imagem:', error);
-            // }
-
-
 
         };
     
@@ -304,31 +286,7 @@ async function compressImage(file) {
             quality: .5, // Ajuste a qualidade conforme necessário
             // maxWidth: 800, // Largura máxima da imagem
             // maxHeight: 600, // Altura máxima da imagem
-            // maxWidth: 700, // Largura máxima da imagem
-            // maxHeight: 500, // Altura máxima da imagem
         };
-
-        // const reader = new FileReader();
-
-        // reader.onload = async () => {
-        //     try {
-        //         const compressedDataUrl = await resizeImage(reader.result, options.maxWidth, options.maxHeight);
-        //         resolve(compressedDataUrl);
-        //     } catch (error) {
-        //         reject(error);
-        //     }
-        // };
-
-        // reader.onerror = (error) => {
-        //     reject(error);
-        // };
-
-        // reader.readAsDataURL(file);
-
-
-
-
-
 
         new ImageCompressor(file, {
             ...options,
@@ -345,43 +303,12 @@ async function compressImage(file) {
     });
 }
 
-
-// function resizeImage(base64, maxWidth, maxHeight) {
-//     return new Promise((resolve, reject) => {
-//         const img = new Image();
-//         img.src = base64;
-
-//         img.onload = () => {
-//             let width = img.width;
-//             let height = img.height;
-
-//             if (width > maxWidth) {
-//                 height *= maxWidth / width;
-//                 width = maxWidth;
-//             }
-
-//             if (height > maxHeight) {
-//                 width *= maxHeight / height;
-//                 height = maxHeight;
-//             }
-
-//             const canvasResized = document.createElement('canvas');
-//             const ctxResized = canvasResized.getContext('2d');
-//             canvasResized.width = width;
-//             canvasResized.height = height;
-
-//             ctxResized.drawImage(img, 0, 0, width, height);
-
-//             resolve(canvasResized.toDataURL('image/jpeg'));
-//         };
-
-//         img.onerror = reject;
-//     });
-// }
-
 function abrirEscolhas() {
     previewContainer.innerHTML = '';
     fileInput.value = '';
+    areaFotosPreSelecionadas.classList.add('ocultar');
+    loader.classList.remove('esconder-loader');
+
 }
 
 function confirmarFotos() {
@@ -392,9 +319,6 @@ function confirmarFotos() {
     renderizarSlides(urlsImagens);
 
     localStorage.setItem('imagensSlide', JSON.stringify(urlsImagens));
-
-    // localStorage.setItem('imagensSlide', JSON.stringify(urlsImagens.map(img => img.original)));
-    // localStorage.setItem('imagensSlide', JSON.stringify(urlsRedimensionadas));
 
     cancelar();
 }
@@ -411,7 +335,7 @@ function renderizarSlides(listaImagens) {
 
     listaImagens.forEach((compressedDataUrl, index) => {
         const imgElement = document.createElement('img');
-        imgElement.src = compressedDataUrl; // Exibe a versão comprimida no DOM
+        imgElement.src = compressedDataUrl;
         imgElement.alt = `Imagem ${index + 1}`;
         imagens.appendChild(imgElement);
         imgElement.style.left = `${index * 100}%`;

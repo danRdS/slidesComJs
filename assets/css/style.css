@@ -181,16 +181,49 @@ input[type=file] {
 }
 
 .containerImage {
+    display: grid;
+    place-items: center;
+    position: relative;
+    width: 100%;
+    min-width: 300px;
+    height: 100%;
+    margin: auto;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.containerImage2 {
     background: linear-gradient(to right bottom, #6889ff, rgb(66, 39, 70));
     display: flex;
     gap: 1rem;
     width: 100%;
-    min-width: 300px;
     height: 100%;
     margin: auto;
     padding: 8px;
     border-radius: 8px;
     overflow-x: scroll;
+}
+
+.loader {
+    all: unset;
+    display: block;
+    margin: auto;
+    width: 30px;
+    height: 30px;
+    border: 4px solid #a0b3f9;
+    border-top-color: #09f;
+    border-radius: 50%;
+    animation: rotate .6s linear infinite;
+    position: absolute;
+}
+
+.esconder-loader {
+    display: none;
+}
+
+@keyframes rotate {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .containerImage img {
