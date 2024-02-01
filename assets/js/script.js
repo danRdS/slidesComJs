@@ -98,35 +98,10 @@ async function getImageDimensions(base64) {
     });
 }
 
-// async function compressImage(file) {
-//     return new Promise((resolve, reject) => {
-//         const options = {
-//             quality: .5, // Ajuste a qualidade conforme necessário
-//             // maxWidth: 800, // Largura máxima da imagem
-//             // maxHeight: 600, // Altura máxima da imagem
-//         };
-
-//         new ImageCompressor(file, {
-//             ...options,
-//             success(result) {
-//                 const reader = new FileReader();
-//                 reader.readAsDataURL(result);
-//                 reader.onload = () => resolve(reader.result);
-//             },
-//             error(error) {
-//                 reject(error);
-//             },
-//         });
-
-//     });
-// }
-
 async function compressImage(file) {
     return new Promise((resolve, reject) => {
         const options = {
             quality: 0.5,
-            // maxWidth: 800,
-            // maxHeight: 600,
         };
 
         const reader = new FileReader();
