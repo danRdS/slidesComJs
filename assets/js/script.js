@@ -280,28 +280,97 @@ async function getImageDimensions(base64) {
     });
 }
 
+// async function compressImage(file) {
+//     return new Promise((resolve, reject) => {
+//         const options = {
+//             quality: .5, // Ajuste a qualidade conforme necessário
+//             // maxWidth: 800, // Largura máxima da imagem
+//             // maxHeight: 600, // Altura máxima da imagem
+//         };
+
+//         new ImageCompressor(file, {
+//             ...options,
+//             success(result) {
+//                 const reader = new FileReader();
+//                 reader.readAsDataURL(result);
+//                 reader.onload = () => resolve(reader.result);
+//             },
+//             error(error) {
+//                 reject(error);
+//             },
+//         });
+
+//     });
+// }
+
+
+
+
+
+
+
 async function compressImage(file) {
     return new Promise((resolve, reject) => {
         const options = {
-            quality: .5, // Ajuste a qualidade conforme necessário
+            quality: 0.5, // Ajuste a qualidade conforme necessário
             // maxWidth: 800, // Largura máxima da imagem
             // maxHeight: 600, // Altura máxima da imagem
         };
 
-        new ImageCompressor(file, {
-            ...options,
-            success(result) {
-                const reader = new FileReader();
-                reader.readAsDataURL(result);
-                reader.onload = () => resolve(reader.result);
-            },
-            error(error) {
-                reject(error);
-            },
-        });
-
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const base64 = e.target.result;
+            loadImage(
+                base64,
+                (canvas) => {
+                    canvas.toBlob(
+                        (blob) => {
+                            const blobReader = new FileReader();
+                            blobReader.readAsDataURL(blob);
+                            blobReader.onload = () => resolve(blobReader.result);
+                        },
+                        'image/jpeg',
+                        options.quality
+                    );
+                },
+                {
+                    maxWidth: options.maxWidth,
+                    maxHeight: options.maxHeight,
+                    orientation: true, // Ativa a correção automática de orientação
+                }
+            );
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
     });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function abrirEscolhas() {
     previewContainer.innerHTML = '';
