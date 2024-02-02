@@ -80,7 +80,6 @@ function uploadFiles() {
     }
 }
 
-
 async function getImageDimensions(base64) {
     return new Promise((resolve, reject) => {
         const img = new Image();
@@ -137,7 +136,6 @@ function abrirEscolhas() {
     fileInput.value = '';
     areaFotosPreSelecionadas.classList.add('ocultar');
     loader.classList.remove('esconder-loader');
-
 }
 
 function confirmarFotos() {

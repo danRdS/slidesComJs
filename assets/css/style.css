@@ -290,7 +290,9 @@ section {
     position: absolute;
     top: 1rem;
     right: 1rem;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
+    font-weight: 500;
+    filter: drop-shadow(0 0 1px rgb(0,0,0));
     z-index: 1;
 }
 
