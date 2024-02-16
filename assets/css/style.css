@@ -87,11 +87,11 @@ button {
 }
 
 .botao-add-foto-clicado i {
-    animation:  girar .5s ease-in 1 forwards;
+    animation:  girar .4s cubic-bezier(.78, 0, .17, .3) 1 forwards;
 }
 
 .botao-add-foto-retira-animacao i {
-    animation:  girar-reverso .5s ease-in 1 forwards;
+    animation:  girar-reverso .4s cubic-bezier(.78,0,.18,.56) 1 forwards;
 }
 
 .botao-add-foto-clicado {
@@ -104,12 +104,12 @@ button {
 
 @keyframes girar {
     30% { transform: rotate(0); }
-    to { transform: rotate(180deg); }
+    to { transform: rotate(135deg); }
 }
 
 @keyframes girar-reverso {
-    30% { transform: rotate(0); }
-    to { transform: rotate(-180deg); }
+    from { transform: rotate(135deg); }
+    to { transform: rotate(0); }
 }
 
 /* area input files - escolha de fotos */
